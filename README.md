@@ -25,18 +25,6 @@
 4.  **Configure the VIP**: Configure the clock parameters using the clkgen_config.sv
 5.  **Monitor Clock Signals**: Use the VIP's monitoring features to verify the clock signals.
 
-## File Structure
-
-clock_generator/
-├── rtl/ # SystemVerilog RTL code
-├── uvm/ # UVM verification environment
-│ ├── env/ # UVM environment
-│ ├── test/ # UVM test cases
-│ └── ...
-├── doc/ # Documentation
-├── examples/ # Examples
-└── ...
-
 ## Dependencies
 
 * SystemVerilog simulator
