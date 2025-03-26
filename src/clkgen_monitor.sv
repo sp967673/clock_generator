@@ -24,9 +24,10 @@ task clkgen_monitor::run_phase(uvm_phase phase);
 endtask: run_phase
 
 task clkgen_monitor::check_clock(const ref clkgen_config cfg);
-    int  CLK_FREQ  = cfg.get_clk_freq();
-    int  CLK_DUTY  = cfg.get_clk_duty();
-    real CLK_START = cfg.get_clk_start();
+    int  CLK_FREQ   = cfg.get_clk_freq();
+    int  CLK_DUTY   = cfg.get_clk_duty();
+    real CLK_START  = cfg.get_clk_start();
+    real CLK_JITTER = cfg.get_clk_jitter();
     real freq, duty, jitter;
     real period, last_edge, high_time_s, high_time_e;
     real current_edge, high_time;
@@ -35,6 +36,7 @@ task clkgen_monitor::check_clock(const ref clkgen_config cfg);
         @(posedge vif.clko);
 
         current_edge = $realtime;
+        last_edge = 0;
         if (last_edge > 0) begin
             period = current_edge - last_edge;
             freq = 1.0 / period * 1000;
@@ -56,6 +58,10 @@ task clkgen_monitor::check_clock(const ref clkgen_config cfg);
 
             if (int'(duty) != CLK_DUTY)
                 `uvm_error(get_type_name(), $sformatf("The predicted clock duty %0f is not as expected !!!", duty))
+        end
+
+        if ((jitter < CLK_JITTER) || (jitter > CLK_JITTER)) begin
+            `uvm_error(get_type_name(), $sformatf("Clock jitter %0f is out of expected range !!!", jitter))
         end
 
         last_edge = current_edge;
